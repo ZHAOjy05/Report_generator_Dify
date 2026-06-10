@@ -1,0 +1,2398 @@
+app:
+  description: ''
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  icon_type: emoji
+  mode: advanced-chat
+  name: 实验报告生成器_2
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/deepseek:0.0.17@f7a5c1d222d17ee419b17a80d6e4923838fe93788dc724a3af73fbc6990b3a32
+    version: null
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/openai:0.4.2@21195ee1321849e0a7d4b3f6b2fd8c2be23ea6c7182e1b444ecc4c1711b52468
+    version: null
+kind: app
+version: 0.6.0
+workflow:
+  conversation_variables:
+  - description: ''
+    id: ab65c238-5561-4b60-8982-f4edef73057b
+    name: mem_matlab_code
+    selector:
+    - conversation
+    - mem_matlab_code
+    value: ''
+    value_type: string
+  - description: ''
+    id: 8f02a8aa-360f-4d5e-a2a6-72486bbb1c1d
+    name: mem_other_requests
+    selector:
+    - conversation
+    - mem_other_requests
+    value: ''
+    value_type: string
+  - description: ''
+    id: 3567ae78-7e2e-4a01-b389-1f167c96332a
+    name: mem_results
+    selector:
+    - conversation
+    - mem_results
+    value: ''
+    value_type: string
+  - description: ''
+    id: e458e471-6214-43a9-b8ea-9e6bd188b881
+    name: mem_full_text
+    selector:
+    - conversation
+    - mem_full_text
+    value: ''
+    value_type: string
+  - description: ''
+    id: d944f12b-98a3-4de7-b770-2193a9f34445
+    name: mem_md_tables
+    selector:
+    - conversation
+    - mem_md_tables
+    value: ''
+    value_type: string
+  - description: ''
+    id: 98c50d2f-89c7-4e8c-bc18-908a09abbe01
+    name: mem_datafilename
+    selector:
+    - conversation
+    - mem_datafilename
+    value: ''
+    value_type: string
+  - description: ''
+    id: 0aaa510c-8609-4993-9ae4-eae47a3fb88c
+    name: mem_current_json
+    selector:
+    - conversation
+    - mem_current_json
+    value: ''
+    value_type: string
+  - description: ''
+    id: 373fcdd2-f6a9-4abe-8243-e48829c0d06b
+    name: mem_schema
+    selector:
+    - conversation
+    - mem_schema
+    value: ''
+    value_type: string
+  - description: ''
+    id: d6064d1b-a499-4644-8747-27a82d0fe7a8
+    name: mem_steps
+    selector:
+    - conversation
+    - mem_steps
+    value: ''
+    value_type: string
+  - description: ''
+    id: bfadfd8c-7204-4f1f-9784-df1273fb4b03
+    name: mem_apparatus
+    selector:
+    - conversation
+    - mem_apparatus
+    value: ''
+    value_type: string
+  - description: ''
+    id: d3a50cd8-e2f9-407f-ac52-c6d130168100
+    name: mem_purpose
+    selector:
+    - conversation
+    - mem_purpose
+    value: ''
+    value_type: string
+  - description: ''
+    id: fbf4e570-15e7-4a3e-8dfe-34f447070e2d
+    name: mem_principle
+    selector:
+    - conversation
+    - mem_principle
+    value: ''
+    value_type: string
+  - description: ''
+    id: bb6dcf35-09a5-49a3-ab3e-cb070f3eed42
+    name: mem_outline
+    selector:
+    - conversation
+    - mem_outline
+    value: ''
+    value_type: string
+  - description: ''
+    id: 85f4eef2-6513-4236-939a-1b6fade2967d
+    name: mem_refFile
+    selector:
+    - conversation
+    - mem_refFile
+    value: ''
+    value_type: string
+  environment_variables:
+  - description: ''
+    id: f4ac0d85-fca9-4478-9dd1-ed5f1fa08be7
+    name: GLOBAL_MD_STYLE
+    selector:
+    - env
+    - GLOBAL_MD_STYLE
+    value: "【全局 Markdown 学术排版规范（极其严格）】\n你的输出必须是一段纯净的 Markdown 文本。为了保证最终拼接的实验报告格式统一，请严格遵守以下所有排版红线：\n\
+      \n1. 标题层级规范：\n   - 严禁使用一级标题（#），因为它是整个报告的大标题。\n   - 你的小节主标题必须使用二级标题（## 标题名）。\n\
+      \   - 内部子目录使用三级标题（### 标题名），严禁跳跃层级。\n\n2. 字体与强调规范：\n   - 纯净输出，绝对禁止使用 HTML 的 <font>\
+      \ 标签去强行修改字体和字号。\n   - 关键物理概念或核心结论，请使用加粗（**文字**）进行强调。\n\n3. 数学公式规范（极其重要）：\n \
+      \  - 行内公式：必须使用单个美元符号包裹，如 `$E=mc^2$`，公式与前后汉字之间保留一个空格。\n   - 独立居中公式：必须使用双美元符号包裹（$$...$$）。\n\
+      \   - 公式编号：所有独立公式必须在末尾使用 LaTeX 的 \\tag{} 语法进行标号。\n     示例代码：\n     $$\n    \
+      \ F = k \\cdot \\Delta x \\tag{1}\n     $$\n     （注意：不要手动敲空格去对齐括号，\\tag 语法会自动让编号在页面最右侧对齐）。\n\
+      \n4. 数据表排版规范：\n   - 所有 Markdown 表格的上方，必须紧挨着一行居中的表格标题。\n   - 必须使用 HTML 居中标签：`<center>表\
+      \ X：表格描述名称</center>`\n   - 标题与下方的表格之间必须留出一个空行。\n\n5. 图片占位与图注规范：\n   - 如果需要插入本地图片，必须使用\
+      \ HTML 标签以限制宽度：`<img src=\"figure_X.png\" width=\"80%\">`\n   - 图片的正下方，必须紧挨着一行居中的图注说明：`<center>图\
+      \ X：图片描述名称</center>`\n\n6. 纯净输出命令：\n   - 请直接输出排版后的 Markdown 文本内容，绝对不要在最外层使用\
+      \ ```markdown 代码块标记包裹！"
+    value_type: string
+  - description: 文章结构
+    id: f2ece085-0e52-48b7-9390-f9abf4b10ab3
+    name: structure
+    selector:
+    - env
+    - structure
+    value: '# 文章结构
+
+      ## 一、实验目的<!-- 分条简述实验目的，如果“实验指导书”中明确分条列出了实验目的，则直接照搬 -->
+
+      <!-- 此处为正文 -->
+
+      ## 二、实验原理<!-- 简述实验原理，包括基本的公式、定理定律、实验方法、测量方法、数据处理方法等-- >
+
+      <!-- 此处为正文 -->
+
+      ## 三、实验装置 <!-- 列出实验所用的仪器、试件等 --!>：
+
+      <!-- 此处为正文 -->
+
+      ## 四、实验步骤 <!-- 分条简述实验步骤，如果“实验指导书”中的实验步骤比较冗长，需要进行减省 --!>：
+
+      <!-- 此处为正文 -->
+
+      ## 五、实验结果<!-- 分条呈现实验得到的数据、曲线、需要计算的物理量等，需要分析的地方加入数据分析-->
+
+      <!-- 此处为正文 -->
+
+      ## 六、总结  <!-- 对之前实验结果的总结，对实验提出建议，或者谈谈自己的感想 -->
+
+      <!-- 此处为正文 -->
+
+      # 文章结构的标题层级：
+
+      - 只使用三个级别的标题，
+
+      - 第一级是中国小写数字，如：一
+
+      - 第二级标题是阿拉伯数字标题，如：1
+
+      - 第三级标题是两位阿拉伯数字，如：1.1'
+    value_type: string
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - remote_url
+      - local_file
+      enabled: true
+      fileUploadConfig:
+        attachment_image_file_size_limit: 2
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        file_upload_limit: 50
+        image_file_batch_limit: 10
+        image_file_size_limit: 10
+        single_chunk_attachment_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInLoop: false
+        sourceType: document-extractor
+        targetType: llm
+      id: 1778936183382-source-llm-target
+      source: '1778936183382'
+      sourceHandle: source
+      target: llm
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: llm
+      id: llm-source-1778986305710-target
+      source: llm
+      sourceHandle: source
+      target: '1778986305710'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: llm
+      id: llm-source-1778987928414-target
+      source: llm
+      sourceHandle: source
+      target: '1778987928414'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: llm
+      id: llm-source-1779376041671-target
+      source: llm
+      sourceHandle: source
+      target: '1779376041671'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: llm
+      id: 1779891374079-source-1780159307661-target
+      source: '1779891374079'
+      sourceHandle: source
+      target: '1780159307661'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: llm
+      id: llm-source-1780159307661-target
+      source: llm
+      sourceHandle: source
+      target: '1780159307661'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 1780164201398-source-1780156772445-target
+      source: '1780164201398'
+      sourceHandle: source
+      target: '1780156772445'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: start
+        targetType: question-classifier
+      id: 1777687273989-source-1780162498882-target
+      source: '1777687273989'
+      sourceHandle: source
+      target: '1780162498882'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: question-classifier
+        targetType: document-extractor
+      id: 1780162498882-1-1778936183382-target
+      source: '1780162498882'
+      sourceHandle: '1'
+      target: '1778936183382'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: question-classifier
+        targetType: code
+      id: 1780162498882-1-1779891374079-target
+      source: '1780162498882'
+      sourceHandle: '1'
+      target: '1779891374079'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: llm
+      id: llm-source-1780219020228-target
+      source: llm
+      sourceHandle: source
+      target: '1780219020228'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: assigner
+      id: 1778986305710-source-1780220189832-target
+      source: '1778986305710'
+      sourceHandle: source
+      target: '1780220189832'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: assigner
+      id: 1778987928414-source-1780220189832-target
+      source: '1778987928414'
+      sourceHandle: source
+      target: '1780220189832'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: assigner
+      id: 1779376041671-source-1780220189832-target
+      source: '1779376041671'
+      sourceHandle: source
+      target: '1780220189832'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: assigner
+      id: 1780219020228-source-1780220189832-target
+      source: '1780219020228'
+      sourceHandle: source
+      target: '1780220189832'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: assigner
+      id: llm-source-1780220189832-target
+      source: llm
+      sourceHandle: source
+      target: '1780220189832'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: document-extractor
+        targetType: assigner
+      id: 1778936183382-source-1780220189832-target
+      source: '1778936183382'
+      sourceHandle: source
+      target: '1780220189832'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: assigner
+      id: 1779891374079-source-1780220189832-target
+      source: '1779891374079'
+      sourceHandle: source
+      target: '1780220189832'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: assigner
+      id: 1780159307661-source-1780220189832-target
+      source: '1780159307661'
+      sourceHandle: source
+      target: '1780220189832'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: question-classifier
+        targetType: llm
+      id: 1780162498882-2-1780164201398-target
+      source: '1780162498882'
+      sourceHandle: '2'
+      target: '1780164201398'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: assigner
+      id: 1780164201398-source-1780220748424-target
+      source: '1780164201398'
+      sourceHandle: source
+      target: '1780220748424'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: question-classifier
+        targetType: llm
+      id: 1780162498882-1780218467207-1780222438462-target
+      source: '1780162498882'
+      sourceHandle: '1780218467207'
+      target: '1780222438462'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: question-classifier
+        targetType: code
+      id: 1780162498882-1-1780301724189-target
+      source: '1780162498882'
+      sourceHandle: '1'
+      target: '1780301724189'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: assigner
+      id: 1780301724189-source-1780220189832-target
+      selected: false
+      source: '1780301724189'
+      sourceHandle: source
+      target: '1780220189832'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: question-classifier
+        targetType: llm
+      id: 1780162498882-1780301458666-1780306535321-target
+      source: '1780162498882'
+      sourceHandle: '1780301458666'
+      target: '1780306535321'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: 1780159307661-source-1780318362803-target
+      source: '1780159307661'
+      sourceHandle: source
+      target: '1780318362803'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: answer
+      id: 1780318362803-source-1780218826118-target
+      source: '1780318362803'
+      sourceHandle: source
+      target: '1780218826118'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: assigner
+      id: 1780318362803-source-1780220189832-target
+      source: '1780318362803'
+      sourceHandle: source
+      target: '1780220189832'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: 1780306535321-source-17803189114530-target
+      source: '1780306535321'
+      sourceHandle: source
+      target: '17803189114530'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: template-transform
+      id: 17803189114530-source-1780415931066-target
+      source: '17803189114530'
+      sourceHandle: source
+      target: '1780415931066'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: template-transform
+        targetType: assigner
+      id: 1780415931066-source-1780416314089-target
+      source: '1780415931066'
+      sourceHandle: source
+      target: '1780416314089'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: template-transform
+        targetType: answer
+      id: 1780415931066-source-1780415514971-target
+      source: '1780415931066'
+      sourceHandle: source
+      target: '1780415514971'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: question-classifier
+        targetType: llm
+      id: 1780162498882-1780456508717-1780456606308-target
+      source: '1780162498882'
+      sourceHandle: '1780456508717'
+      target: '1780456606308'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: template-transform
+      id: 1780456606308-source-17804590437600-target
+      source: '1780456606308'
+      sourceHandle: source
+      target: '17804590437600'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: template-transform
+        targetType: llm
+      id: 17804590437600-source-1780459145283-target
+      source: '17804590437600'
+      sourceHandle: source
+      target: '1780459145283'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: template-transform
+      id: 1780459145283-source-17804648049150-target
+      source: '1780459145283'
+      sourceHandle: source
+      target: '17804648049150'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: template-transform
+        targetType: answer
+      id: 17804648049150-source-1780465054120-target
+      source: '17804648049150'
+      sourceHandle: source
+      target: '1780465054120'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: 1780222438462-source-17808045266790-target
+      source: '1780222438462'
+      sourceHandle: source
+      target: '17808045266790'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: answer
+      id: 17808045266790-source-1780223216912-target
+      source: '17808045266790'
+      sourceHandle: source
+      target: '1780223216912'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: assigner
+      id: 17808045266790-source-1780804381440-target
+      source: '17808045266790'
+      sourceHandle: source
+      target: '1780804381440'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: question-classifier
+        targetType: llm
+      id: 1780162498882-1780804101594-1780807270658-target
+      source: '1780162498882'
+      sourceHandle: '1780804101594'
+      target: '1780807270658'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: 1780807270658-source-17808113937980-target
+      source: '1780807270658'
+      sourceHandle: source
+      target: '17808113937980'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: answer
+      id: 17808113937980-source-1780811429569-target
+      source: '17808113937980'
+      sourceHandle: source
+      target: '1780811429569'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: assigner
+      id: 17808113937980-source-1780811568220-target
+      source: '17808113937980'
+      sourceHandle: source
+      target: '1780811568220'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        selected: false
+        title: 用户输入
+        type: start
+        variables:
+        - allowed_file_extensions: []
+          allowed_file_types:
+          - document
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+          default: ''
+          hide: false
+          hint: ''
+          label: 报告参考（指导书等）
+          options: []
+          placeholder: ''
+          required: false
+          type: file
+          variable: refFile
+        - allowed_file_extensions: []
+          allowed_file_types:
+          - document
+          - image
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+          default: ''
+          hide: false
+          hint: ''
+          label: 实验数据表
+          options: []
+          placeholder: ''
+          required: false
+          type: file
+          variable: data
+        - default: ''
+          hint: ''
+          label: 其他要求t
+          options: []
+          placeholder: ''
+          required: false
+          type: text-input
+          variable: other_request
+      height: 160
+      id: '1777687273989'
+      position:
+        x: -509.9605747606199
+        y: 298.45285030046875
+      positionAbsolute:
+        x: -509.9605747606199
+        y: 298.45285030046875
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            temperature: 0.2
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: 1192818b-07dc-412d-907c-8942fae997ba
+          role: system
+          text: '# Capacity and Role
+
+            你是经验丰富的实验研究人员，擅长撰写实验报告。
+
+
+            # Insight
+
+            文章结构：{{#env.structure#}}
+
+
+            # Statement
+
+            你负责按照“文章结构”，根据“实验指导书”和“其他要求”撰写实验报告的大纲，初步确定每个章节要撰写的内容和方向。
+
+
+            # Personality
+
+            【重要！！！】仅输出调研报告的大纲内容，不要输出你的思考过程、修改标记或其他任何无关的信息。'
+        - id: 1a07a6e8-707e-4ef1-b052-c8b8107bbce2
+          role: user
+          text: '实验指导书：{{#1778936183382.text#}}
+
+            其他要求：{{#1777687273989.other_request#}}'
+        selected: false
+        structured_output_enabled: false
+        title: 生成大纲
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: llm
+      position:
+        x: 436.7264778388909
+        y: 276.22413707292617
+      positionAbsolute:
+        x: 436.7264778388909
+        y: 276.22413707292617
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        is_array_file: false
+        selected: false
+        title: 提取指导书
+        type: document-extractor
+        variable_selector:
+        - '1777687273989'
+        - refFile
+      height: 103
+      id: '1778936183382'
+      position:
+        x: 152.85652972488117
+        y: 276.22413707292617
+      positionAbsolute:
+        x: 152.85652972488117
+        y: 276.22413707292617
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            temperature: 0.3
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: 507fd20b-583c-4a68-8099-7fecd85c4125
+          role: system
+          text: '# Capacity and Role
+
+            你是经验丰富的实验研究人员，擅长撰写实验报告。
+
+            # Insight
+
+            - 文章结构：{{#env.structure#}}
+
+            标题、小标题格式以“文章结构”中的为准
+
+            # Statement
+
+            你负责按照“文章结构”，参考“报告大纲”中的实验目的部分，根据“实验指导书”和“其他要求”中的内容，撰写实验报告中“一、实验目的”章节的内容，分条输出实验目的。
+
+            ！！！注意输出markdown格式！！！具体参见markdown格式要求：{{#env.GLOBAL_MD_STYLE#}}
+
+            # Personality
+
+            如果“实验指导书”中明确分条列出了实验目的，则直接按照其中的内容输出。
+
+            # Experiment
+
+            不要输出你的思考和推理过程等，仅输出结论，输出格式如下：
+
+            ## 一、 实验目的
+
+            <!-- 此处为正文，以分条排列方式写作。 -->'
+        - id: 8053462e-2fc3-4503-8681-4a64655c5de9
+          role: user
+          text: '报告大纲：{{#llm.text#}}
+
+            实验指导书：{{#1778936183382.text#}}
+
+            其他要求：{{#1777687273989.other_request#}}/'
+        selected: false
+        title: 生成实验目的
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1778986305710'
+      position:
+        x: 767.7634446245897
+        y: 28.622109979515784
+      positionAbsolute:
+        x: 767.7634446245897
+        y: 28.622109979515784
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            temperature: 0.3
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: 75afeec8-a674-4db0-8232-3d94a9017b51
+          role: system
+          text: '# Capacity and Role
+
+            你是经验丰富的实验研究人员，擅长撰写实验报告。
+
+             
+
+            # Insight
+
+            -文章结构：{{#env.structure#}}
+
+            标题、小标题格式以“文章结构”中的为准
+
+
+            # Statement
+
+            你负责按照“文章结构”，参考“报告大纲”中的实验原理部分，根据“实验指导书”和“其他要求”中的内容，撰写实验报告中“二、实验原理”章节的内容。
+
+            ！！！注意输出markdown格式！！！具体参见markdown格式要求：{{#env.GLOBAL_MD_STYLE#}}
+
+            # Personality
+
+            所有内容都要围绕“实验指导书”和“其他要求”来组织，不要偏离主题
+
+            # Experiment
+
+            不要输出你的思考和推理过程等，仅输出结论，输出格式如下：
+
+            ## 二、实验原理
+
+            <!--此处为正文-->'
+        - id: 6d12d0cc-8c5f-4a21-a6ed-44e446735439
+          role: user
+          text: '报告大纲：{{#llm.text#}}
+
+            实验指导书：{{#1778936183382.text#}}
+
+            其他要求：{{#1777687273989.other_request#}}'
+        selected: false
+        title: 生成实验原理
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1778987928414'
+      position:
+        x: 767.7634446245897
+        y: 133.50998340714943
+      positionAbsolute:
+        x: 767.7634446245897
+        y: 133.50998340714943
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            temperature: 0.3
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: a1dfdf7e-0857-4ba0-8a21-e58daa6c5601
+          role: system
+          text: '# Insight
+
+            - 文章结构：{{#env.structure#}}
+
+            标题、小标题格式以“文章结构”中的为准
+
+            # Statement
+
+            你负责按照“文章结构”，参考“报告大纲”中的实验装置部分，根据“实验指导书”和“其他要求”中的内容，撰写实验报告中“三、实验装置”章节的内容，分条输出实验装置。
+
+            ！！！注意输出markdown格式！！！具体参见markdown格式要求：{{#env.GLOBAL_MD_STYLE#}}
+
+            # Personality
+
+            如果“实验指导书”中明确分条列出了实验装置，则按照其中的内容输出。如果实验装置描述冗长，可以适当精简
+
+            # Experiment
+
+            不要输出你的思考和推理过程等，仅输出结论，输出格式如下：
+
+            ## 三、 实验装置
+
+            <!-- 此处为正文，以分条排列方式写作。 -->'
+        - id: 8a645d19-0beb-4093-950a-98d07046fa11
+          role: user
+          text: '报告大纲：{{#llm.text#}}
+
+            实验指导书：{{#1778936183382.text#}}
+
+            其他要求：{{#1777687273989.other_request#}}'
+        selected: false
+        title: 生成实验装置
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1779376041671'
+      position:
+        x: 767.7634446245897
+        y: 241.03687265632897
+      positionAbsolute:
+        x: 767.7634446245897
+        y: 241.03687265632897
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        code: "import json\nimport requests\nimport csv\nimport io\n\ndef main(file_url:\
+          \ str) -> dict:\n    try:\n        if not file_url:\n            return\
+          \ {\"schema_str\": \"错误: 未获取到文件链接\", \"status\": \"error\"}\n        \n\
+          \        response = requests.get(file_url)\n        response.raise_for_status()\n\
+          \        \n        try:\n            content = response.content.decode('utf-8')\n\
+          \        except UnicodeDecodeError:\n            content = response.content.decode('gbk')\n\
+          \            \n        reader = csv.reader(io.StringIO(content))\n     \
+          \   \n        tables_info = []\n        \n        # 状态追踪机\n        current_table_name\
+          \ = None\n        current_headers = []\n        current_data = []\n    \
+          \    header_line_num = None\n        data_start_line_num = None\n      \
+          \  \n        table_counter = 1\n        global_line_num = 0\n\n        def\
+          \ save_current_table(end_line_num):\n            nonlocal current_table_name,\
+          \ current_headers, current_data, header_line_num, data_start_line_num, table_counter,\
+          \ tables_info\n            if current_headers or current_data:\n       \
+          \         name = current_table_name if current_table_name else f\"未命名数据表_{table_counter}\"\
+          \n                \n                # 计算统计特征\n                col_stats\
+          \ = {}\n                for col_idx, header in enumerate(current_headers):\n\
+          \                    numeric_vals = []\n                    for row in current_data:\n\
+          \                        if col_idx < len(row):\n                      \
+          \      val_str = row[col_idx].strip()\n                            if val_str:\n\
+          \                                try:\n                                \
+          \    numeric_vals.append(float(val_str))\n                             \
+          \   except ValueError:\n                                    pass\n     \
+          \               if numeric_vals:\n                        col_stats[header]\
+          \ = {\"min\": min(numeric_vals), \"max\": max(numeric_vals)}\n         \
+          \       \n                tables_info.append({\n                    \"table_name\"\
+          : name,\n                    \"csv_location\": {\n                     \
+          \   \"header_row\": header_line_num,\n                        \"data_start_row\"\
+          : data_start_line_num,\n                        \"data_end_row\": end_line_num,\n\
+          \                        \"total_columns\": len(current_headers)\n     \
+          \               },\n                    \"total_data_points\": len(current_data),\n\
+          \                    \"columns\": current_headers,\n                   \
+          \ \"column_statistics_min_max\": col_stats,\n                    \"sample_data\"\
+          : current_data[:3]\n                })\n                table_counter +=\
+          \ 1\n            \n            # 重置状态\n            current_table_name =\
+          \ None\n            current_headers = []\n            current_data = []\n\
+          \            header_line_num = None\n            data_start_line_num = None\n\
+          \n        for row in reader:\n            global_line_num += 1\n       \
+          \     \n            # 自动清理 Excel 产生的多余尾随空列\n            while row and not\
+          \ row[-1].strip():\n                row.pop()\n                \n      \
+          \      cleaned_row = [str(c).strip() for c in row]\n            non_empty_cells\
+          \ = [c for c in cleaned_row if c]\n            \n            # 遇到空行，截断并保存上一张表\n\
+          \            if not non_empty_cells:\n                if current_headers:\n\
+          \                    save_current_table(global_line_num - 1)\n         \
+          \       continue\n                \n            if not current_headers:\n\
+          \                # 识别表名：如果只有第一个单元格有字\n                if len(non_empty_cells)\
+          \ == 1 and cleaned_row[0] != \"\":\n                    current_table_name\
+          \ = cleaned_row[0]\n                else:\n                    # 识别表头\n\
+          \                    current_headers = cleaned_row\n                   \
+          \ header_line_num = global_line_num\n                    data_start_line_num\
+          \ = global_line_num + 1\n            else:\n                # 记录数据行\n  \
+          \              current_data.append(cleaned_row)\n                \n    \
+          \    # 循环结束，保存最后一张表\n        if current_headers:\n            save_current_table(global_line_num)\n\
+          \n        if not tables_info:\n            return {\"schema_str\": \"错误:\
+          \ CSV文件中未读取到有效数据\", \"status\": \"error\"}\n\n        return {\n       \
+          \     \"schema_str\": json.dumps(tables_info, ensure_ascii=False, indent=2),\n\
+          \            \"status\": \"success\"\n        }\n        \n    except Exception\
+          \ as e:\n        return {\"schema_str\": f\"解析失败: {str(e)}\", \"status\"\
+          : \"error\"}"
+        code_language: python3
+        outputs:
+          schema_str:
+            children: null
+            type: string
+          status:
+            children: null
+            type: string
+        selected: false
+        title: CSV数据探针
+        type: code
+        variables:
+        - value_selector:
+          - '1777687273989'
+          - data
+          - url
+          value_type: file
+          variable: file_url
+      height: 51
+      id: '1779891374079'
+      position:
+        x: 152.85652972488117
+        y: 386.1502949814309
+      positionAbsolute:
+        x: 152.85652972488117
+        y: 386.1502949814309
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        answer: '修改后的蓝图如下，请审阅
+
+          {{#1780164201398.text#}}'
+        selected: false
+        title: 审阅修改后蓝图
+        type: answer
+        variables: []
+      height: 118
+      id: '1780156772445'
+      position:
+        x: 522.1822379476656
+        y: 649.2055339969403
+      positionAbsolute:
+        x: 522.1822379476656
+        y: 649.2055339969403
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            response_format: json_object
+            temperature: 0.1
+          mode: chat
+          name: deepseek-v4-flash
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: 84d2d2f7-0f70-4553-9280-960f144e0e52
+          role: system
+          text: "你是一个严谨的工程数据可视化架构师。请根据【实验指导书】、【报告大纲】以及【数据表结构】，设计用于生成 MATLAB 代码的 JSON\
+            \ 配置文件。\n\n【绘图决策逻辑（极其重要）】\n1. 数据寻址映射：在 JSON 中必须明确给出图表所需数据在 CSV 文件中的绝对行号和列号。注意：MATLAB\
+            \ 的列号是从 1 开始计算的（即第一列是 1，第二列是 2）。你必须根据【数据表结构】中的 `columns` 数组推算出正确的 MATLAB\
+            \ 坐标！\n2. 坐标轴类型：若提取出的数据最值跨越 3 个数量级以上，强烈建议使用对数坐标（如 semilogx, loglog）。\n\
+            3. 线型：若 total_data_points > 500，必须使用实线无标记（如 '-'）；若 < 50，应包含离散点标记（如 '-o'）。\n\
+            4.所有与曲线拟合有关的要求，都在输出的JSON文件中归入\"curve_fitting\"一栏\n\n【JSON 结构与输出规范】\n请仅输出纯粹的\
+            \ JSON 字符串，不要包含 markdown 代码块标记，结构如下：\n{\n  \"figure_count\": 需绘制的总图表数,\n\
+            \  \"figures\": [\n    {\n      \"id\": 1,\n      \"title\": \"图表标题\"\
+            ,\n      \"data_source\": {\n        \"table_name\": \"使用的数据表名称\",\n \
+            \       \"csv_read_range\": [数据起始行号, 数据结束行号],\n        \"x_column_index\"\
+            : \"X轴对应的MATLAB列序号 (整数)\",\n        \"y_column_index\": \"Y轴对应的MATLAB列序号\
+            \ (整数)（如果有多条曲线，列序号使用[*,*]标注，例如[2,3]表示两条曲线，对应列序号为2,3）\"\n      },\n   \
+            \   \"plot_type\": \"MATLAB绘图函数 (如 plot, scatter)\",\n      \"axis_scale\"\
+            : \"linear / semilogx / semilogy / loglog\",\n      \"line_style\": \"\
+            线型颜色与标记 (如 'b-o')\",\n      \"curve_fitting\": \"数据拟合要求 (如 'none', 'linear_fit')\"\
+            ,\n      \"xlabel\": \"横轴标签（必须带单位）\",\n      \"ylabel\": \"纵轴标签（必须带单位）\"\
+            ,\n      \"special_instructions\": \"特殊要求（如无则填 '无'）\"\n    }\n  ]\n}\n\
+            【补充要求】\n你输出的JSON文件将用于指导其他大语言模型生成用于绘图的MATLAB代码。请充分考虑大语言模型和MATLAB的能力，在\"\
+            special_instructions\"一栏不要提LLM或MATLAB难以实现的要求。"
+        - id: f334a70c-9795-4e18-894d-ac0a70a59c66
+          role: user
+          text: '【实验指导书】：{{#1778936183382.text#}}
+
+            【报告大纲】：{{#llm.text#}}
+
+            【数据表结构】：{{#1779891374079.schema_str#}}'
+        selected: false
+        structured_output_enabled: false
+        title: JSON蓝图
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1780159307661'
+      position:
+        x: 478.95073098362354
+        y: 455.2110763324861
+      positionAbsolute:
+        x: 478.95073098362354
+        y: 455.2110763324861
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        classes:
+        - id: '1'
+          label: init
+          name: 用户表达了“开始生成报告”、“初次生成报告”等意图，并且没有提出任何修改意见
+        - id: '2'
+          label: json_modify
+          name: 用户针对“蓝图”提出了具体的修改意见，例如“修改蓝图：添加线性拟合”等。
+        - id: '1780218467207'
+          label: json_confirm
+          name: 用户针对“蓝图”表达了同意、继续、确认等意见，或者明确指示进入matlab绘图代码生成。例如“已确认蓝图无误”，“继续matlab绘图代码生成”等
+        - id: '1780804101594'
+          label: matlab_modify
+          name: 用户表达了“修改MATLAB代码”的意图，并给出了报错提示
+        - id: '1780301458666'
+          label: generate_final
+          name: 用户表达了“整合实验报告”“插入图表”等意图
+        - id: '1780456508717'
+          label: analyze_results
+          name: 用户表达了“加入实验结果分析”的意图
+        model:
+          completion_params:
+            temperature: 0.1
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        query_variable_selector:
+        - '1777687273989'
+        - sys.query
+        selected: false
+        title: 问题分类器
+        type: question-classifier
+        vision:
+          enabled: false
+      height: 345
+      id: '1780162498882'
+      position:
+        x: -203.1444245412212
+        y: 319.45285030046875
+      positionAbsolute:
+        x: -203.1444245412212
+        y: 319.45285030046875
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            response_format: json_object
+            temperature: 0.3
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: 054b12c3-d6a4-489f-9919-fd087f57099b
+          role: system
+          text: "你是一个严谨的工程数据可视化架构师。用户对你此前生成的【旧版JSON绘图蓝图】提出了修改意见。请结合【实验指导书】和【数据表结构】，根据【修改意见】对JSON进行精准修订，并重新输出。\n\
+            \n【修订核心规范】\n请严格遵循【旧版JSON绘图蓝图】的结构，仅针对用户提及的字段进行修改（例如用户要求“图1加线性拟合”，则仅将图1的\"\
+            curve_fitting\"改为\"linear_fit\"），其余未提及的行号、列号、图表必须100%保持不变，严禁胡乱篡改。\n\n\
+            请仅输出纯粹的 JSON 字符串，不要包含 markdown 代码块标记。\n结构必须保持：\n{\n  \"figure_count\"\
+            : 需绘制的总图表数,\n  \"figures\": [ ... ]\n}"
+        - id: 763bab67-f158-4c77-b74c-84a20ef18035
+          role: user
+          text: '【旧版JSON绘图蓝图】：{{#conversation.mem_current_json#}}
+
+            【实验指导书】：{{#conversation.mem_refFile#}}
+
+            【数据表结构】：{{#conversation.mem_schema#}}
+
+            【报告大纲】：{{#conversation.mem_outline#}}
+
+            【修改意见】：{{#sys.query#}}
+
+            【其他要求】：{{#conversation.mem_other_requests#}}'
+        selected: false
+        title: 修改蓝图
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1780164201398'
+      position:
+        x: 185.52614050786417
+        y: 724.99136232246
+      positionAbsolute:
+        x: 185.52614050786417
+        y: 724.99136232246
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        answer: '基础内容已生成，请审阅用于指导matlab绘图代码生成的JSON文件：
+
+          {{#1780318362803.clean_text#}}'
+        selected: false
+        title: 审阅JSON蓝图
+        type: answer
+        variables: []
+      height: 134
+      id: '1780218826118'
+      position:
+        x: 1087.6625057020244
+        y: 580.3681192001732
+      positionAbsolute:
+        x: 1087.6625057020244
+        y: 580.3681192001732
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            temperature: 0.3
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: 7157f3dc-190d-4ae9-b621-4338990beff8
+          role: system
+          text: '# Insight
+
+            - 文章结构：{{#env.structure#}}
+
+            标题、小标题格式以“文章结构”中的为准
+
+            # Statement
+
+            你负责按照“文章结构”，参考“报告大纲”中的实验步骤部分，根据“实验指导书”和“其他要求”中的内容，撰写实验报告中“四、实验步骤”章节的内容，分条输出实验步骤。
+
+            ！！！注意输出markdown格式！！！具体参见markdown格式要求：{{#env.GLOBAL_MD_STYLE#}}
+
+            # Personality
+
+            如果“实验指导书”中明确分条列出了实验步骤，则按照其中的内容输出。如果实验步骤描述冗长，可以适当精简
+
+            # Experiment
+
+            不要输出你的思考和推理过程等，仅输出结论，输出格式如下：
+
+            ## 四、 实验步骤
+
+            <!-- 此处为正文，以分条排列方式写作。 -->'
+        - id: 0a4d69f7-736d-4d06-88c4-8decbcbac7c9
+          role: user
+          text: '报告大纲：{{#llm.text#}}
+
+            实验指导书：{{#1778936183382.text#}}
+
+            其他要求：{{#1777687273989.other_request#}}'
+        selected: false
+        title: 生成实验步骤
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1780219020228'
+      position:
+        x: 767.7634446245897
+        y: 366.1312868765046
+      positionAbsolute:
+        x: 767.7634446245897
+        y: 366.1312868765046
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        items:
+        - input_type: variable
+          operation: over-write
+          value:
+          - '1778936183382'
+          - text
+          variable_selector:
+          - conversation
+          - mem_refFile
+        - input_type: variable
+          operation: over-write
+          value:
+          - llm
+          - text
+          variable_selector:
+          - conversation
+          - mem_outline
+        - input_type: variable
+          operation: over-write
+          value:
+          - '1778986305710'
+          - text
+          variable_selector:
+          - conversation
+          - mem_purpose
+        - input_type: variable
+          operation: over-write
+          value:
+          - '1778987928414'
+          - text
+          variable_selector:
+          - conversation
+          - mem_principle
+        - input_type: variable
+          operation: over-write
+          value:
+          - '1779376041671'
+          - text
+          variable_selector:
+          - conversation
+          - mem_apparatus
+        - input_type: variable
+          operation: over-write
+          value:
+          - '1780219020228'
+          - text
+          variable_selector:
+          - conversation
+          - mem_steps
+        - input_type: variable
+          operation: over-write
+          value:
+          - '1779891374079'
+          - schema_str
+          variable_selector:
+          - conversation
+          - mem_schema
+        - input_type: variable
+          operation: over-write
+          value:
+          - '1780318362803'
+          - clean_text
+          variable_selector:
+          - conversation
+          - mem_current_json
+        - input_type: variable
+          operation: over-write
+          value:
+          - '1777687273989'
+          - data
+          - name
+          variable_selector:
+          - conversation
+          - mem_datafilename
+        - input_type: variable
+          operation: over-write
+          value:
+          - '1780301724189'
+          - md_tables
+          variable_selector:
+          - conversation
+          - mem_md_tables
+        - input_type: variable
+          operation: over-write
+          value:
+          - '1777687273989'
+          - other_request
+          variable_selector:
+          - conversation
+          - mem_other_requests
+        selected: false
+        title: 变量赋值
+        type: assigner
+        version: '2'
+      height: 343
+      id: '1780220189832'
+      position:
+        x: 1189.819019691015
+        y: 225.68483610023077
+      positionAbsolute:
+        x: 1189.819019691015
+        y: 225.68483610023077
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        items:
+        - input_type: variable
+          operation: over-write
+          value:
+          - '1780164201398'
+          - text
+          variable_selector:
+          - conversation
+          - mem_current_json
+        selected: false
+        title: 变量赋值 2
+        type: assigner
+        version: '2'
+      height: 83
+      id: '1780220748424'
+      position:
+        x: 529.7608207802175
+        y: 786.7266031923871
+      positionAbsolute:
+        x: 529.7608207802175
+        y: 786.7266031923871
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            temperature: 0.2
+          mode: chat
+          name: deepseek-v4-pro
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: 28c4133e-3224-42ed-b3f8-41cba5ac339b
+          role: system
+          text: "你是一个资深的工程软件专家。请根据下方经过严格人工审阅的【JSON蓝图】，编写一段健壮、专业、可直接在本地运行的完整 MATLAB\
+            \ (.m) 脚本。\n【第一标准】\n图标题、轴标题、线型等，凡是在【JSON蓝图】中写明的，一律严格按照蓝图，不许更改。\n【MATLAB\
+            \ 编码严苛规范（必须100%执行）】\n1. 文件读取与动态范围：\n   - 本地数据文件名为{{#conversation.mem_datafilename#}}，这是一个CSV文件。\n\
+            \   - 必须使用 `detectImportOptions` 和 `readtable`，并严格根据 【JSON蓝图】中提供的 `csv_read_range`\
+            \ 设置读取范围。\n  - 【关键防警告机制】：在读取前，必须设置 opts.VariableNamingRule = 'preserve'，以防止因表头包含中文或特殊物理单位符号（如斜杠、括号）而触发\
+            \ MATLAB 的自动重命名警告。\n   - 示例：\n    opts = detectImportOptions('experiment_data.csv');\
+            \         opts.DataLines = [3, 150]; % 根据蓝图填入具体的起止行号 \nopts.VariableNamingRule\
+            \ = 'preserve'; % 抑制重命名警告 \nT = readtable('experiment_data.csv', opts);\n\
+            2. 绝对的维度安全锁（极其重要）：\n   - 在提取 X 轴和 Y 轴数据后，进行任何画图或拟合计算前，**必须使用 `(:)` 将变量强制转换为列向量**，彻底杜绝\
+            \ `loglog` 等函数因 1xN 和 Nx1 导致的矩阵维度错乱报错！\n   - 示例：\n     x = T{:, x_column_index};\
+            \ \n     x = x(:); % 强制列向量\n\n3. 工程级制图标准：\n   - 必须包含 `grid on;`。\n   -\
+            \ 严格根据【JSON蓝图】的 `axis_scale` 选择 `plot`、`semilogx`、`semilogy` 或 `loglog`。\n\
+            \   - 若【JSON蓝图】要求 `linear_fit` (线性拟合)，必须使用 `polyfit(x, y, 1)` 计算，用 `plot`\
+            \ 绘制拟合线，并在图例 (`legend`) 中显示拟合方程 (如 y = kx + b)。\n   - 必须添加完整的 `xlabel`、`ylabel`（带单位）和\
+            \ `title`。\n   -如果一张图中有一条以上的图线，需要添加图例，图例需要在最佳位置。\n4. 自动保存： 在每张图的代码末尾，使用\
+            \ `saveas` 或 `exportgraphics` 自动将图表渲染保存为本地图片。图片命名为''figure_{id}.png''，{id}为【JSON蓝图】中的图id\n\
+            5.补充\n如果【JSON蓝图】中的\"special_instructions\"中含有仅根据【JSON蓝图】本身无法实现的要求，可以参考【实验指导书】和【报告大纲】。\n\
+            【数据表结构】可以作为你的备用参考，防止【JSON蓝图】中有遗漏的表头信息。但是仍然以【JSON蓝图】为第一标准。\n请仅输出纯粹的 MATLAB\
+            \ 代码块，代码必须带有清晰的中文注释，不要有任何多余的废话。"
+        - id: bcac2bad-d0b6-4187-ad33-8925e557ccae
+          role: user
+          text: '【JSON蓝图】：{{#conversation.mem_current_json#}}
+
+            【数据表结构】：{{#conversation.mem_schema#}}
+
+            【实验指导书】：{{#conversation.mem_refFile#}}
+
+            【报告大纲】：{{#conversation.mem_outline#}}
+
+            【其他要求】：{{#conversation.mem_other_requests#}}'
+        reasoning_format: separated
+        selected: false
+        title: 生成MATLAB代码
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1780222438462'
+      position:
+        x: 185.52614050786417
+        y: 930.2888900126593
+      positionAbsolute:
+        x: 185.52614050786417
+        y: 930.2888900126593
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        answer: '{{#17808045266790.clean_text#}}'
+        selected: false
+        title: 输出MATLAB代码
+        type: answer
+        variables: []
+      height: 102
+      id: '1780223216912'
+      position:
+        x: 782.4864615971775
+        y: 918.8744373623155
+      positionAbsolute:
+        x: 782.4864615971775
+        y: 918.8744373623155
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        code: "import requests\nimport csv\nimport io\n\ndef main(csv_url: str) ->\
+          \ dict:\n    try:\n        if not csv_url:\n            return {\"md_tables\"\
+          : \"未获取到CSV文件，跳过数据表生成。\"}\n            \n        response = requests.get(csv_url)\n\
+          \        response.raise_for_status()\n        \n        try:\n         \
+          \   content = response.content.decode('utf-8')\n        except UnicodeDecodeError:\n\
+          \            content = response.content.decode('gbk')\n            \n  \
+          \      reader = csv.reader(io.StringIO(content))\n        \n        tables_md\
+          \ = []\n        current_table_name = \"实验数据表\"\n        current_headers\
+          \ = []\n        current_data = []\n        table_counter = 1\n        \n\
+          \        # ====== 核心配置：制表行数阈值 ======\n        MAX_ROWS_TO_RENDER = 50 \n\
+          \n        def format_markdown_table():\n            nonlocal current_table_name,\
+          \ current_headers, current_data, table_counter, tables_md\n            if\
+          \ current_headers:\n                name = current_table_name if current_table_name\
+          \ else f\"数据表_{table_counter}\"\n                total_rows = len(current_data)\n\
+          \                \n                # 【新增逻辑：智能过滤】如果数据量过大，直接输出占位提示，不生成庞大的表格\n\
+          \                if total_rows > MAX_ROWS_TO_RENDER:\n                 \
+          \   tables_md.append(f\"> \U0001F4CA **数据表：{name}**\\n> *注：该表包含 {total_rows}\
+          \ 行数据，数据量过大，为保证报告可读性，具体数据请参见原始 CSV 文件。*\\n\")\n                else:\n \
+          \                   # 数据量小，生成完整 Markdown 表格\n                    md_str\
+          \ = f\"#### {name}\\n\\n\"\n                    md_str += \"|\" + \"|\"\
+          .join(current_headers) + \"|\\n\"\n                    md_str += \"|\" +\
+          \ \"|\".join([\"---\"] * len(current_headers)) + \"|\\n\"\n            \
+          \        for row in current_data:\n                        padded_row =\
+          \ row + [\"\"] * (len(current_headers) - len(row))\n                   \
+          \     md_str += \"|\" + \"|\".join(padded_row) + \"|\\n\"\n            \
+          \        tables_md.append(md_str)\n                    \n              \
+          \  table_counter += 1\n\n            current_table_name = None\n       \
+          \     current_headers = []\n            current_data = []\n\n        for\
+          \ row in reader:\n            while row and not row[-1].strip():\n     \
+          \           row.pop()\n            cleaned_row = [str(c).strip() for c in\
+          \ row]\n            non_empty_cells = [c for c in cleaned_row if c]\n  \
+          \          \n            if not non_empty_cells:\n                if current_headers:\
+          \ format_markdown_table()\n                continue\n                \n\
+          \            if len(non_empty_cells) == 1 and cleaned_row[0] != \"\":\n\
+          \                try:\n                    float(cleaned_row[0])\n     \
+          \               if current_headers: current_data.append(cleaned_row)\n \
+          \               except ValueError:\n                    if current_headers:\
+          \ format_markdown_table()\n                    current_table_name = cleaned_row[0]\n\
+          \            elif not current_headers:\n                current_headers\
+          \ = cleaned_row\n            else:\n                current_data.append(cleaned_row)\n\
+          \                \n        if current_headers:\n            format_markdown_table()\n\
+          \n        return {\"md_tables\": \"\\n\\n\".join(tables_md)}\n        \n\
+          \    except Exception as e:\n        return {\"md_tables\": f\"> 无法生成数据表:\
+          \ {str(e)}\"}"
+        code_language: python3
+        outputs:
+          md_tables:
+            children: null
+            type: string
+        selected: false
+        title: MARKDOWN制表
+        type: code
+        variables:
+        - value_selector:
+          - '1777687273989'
+          - data
+          - url
+          value_type: file
+          variable: csv_url
+      height: 51
+      id: '1780301724189'
+      position:
+        x: 162.85652972488117
+        y: 556.6141857955458
+      positionAbsolute:
+        x: 162.85652972488117
+        y: 556.6141857955458
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            temperature: 0.3
+          mode: chat
+          name: deepseek-v4-pro
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: c0b228f9-ff2f-4523-a5f4-c09c4821b1e3
+          role: system
+          text: "你是一个严谨的工程力学实验报告排版助手。你的任务是根据提供的素材，为学生搭建好【实验结果与分析】这一大章的图文排版骨架。\n【报告结构】：{{#env.structure#}}\n\
+            标题、小标题格式以“文章结构”中的为准\n【排版严苛规范（必须100%遵守）】\n\n1. 章节结构对齐：\n   请严格按照【报告大纲】中关于“结果与分析”部分的层级结构进行输出。\n\
+            \n2. 盲插图表与占位符（核心任务）：\n    请严格解析【JSON蓝图】中的 `figures` 数组，在对应小节下使用纯正的 Markdown\
+            \ 语法插入本地图片。\n     - 格式必须极其标准：`![{title}](figure_{id}.png)`           \
+            \              示例：`![曲线1](figure_1.png)`\n    - 并在图片正下方，居中添加图名，如：`<center>图\
+            \ {id}：{title}</center>`\n3. 穿插数据表：\n   将输入的【数据表】放置在符合逻辑的位置。若表格中带有“注：该表包含...”，请原样保留该提示。\n\
+            \    -在所有数据表上方居中添加表头，格式为表x：{表标题}\n4. 绝对禁止代写分析（红线纪律）：\n   你只负责搭建“图片+表格”的展示框架。**绝对不要**生成任何关于实验误差、数据走势、物理意义的实质性分析文字！\n\
+            \   在每一张图表或数据表之后，必须留下统一格式的 Markdown 引用块，作为学生的作答区：\n   \n   > **【学生分析作答区】**\n\
+            \   > 请在此处填写你的分析：结合上方的数据与图表，讨论其物理规律、误差来源及实验结论...\n   > （在此输入...）\n\n请仅输出该章节排版优美的\
+            \ Markdown 纯文本代码，不要有任何多余的开头或结尾寒暄。"
+        - id: afedb94c-827b-4a2e-ace3-8fdba1fce953
+          role: user
+          text: '【报告大纲】：{{#conversation.mem_outline#}}
+
+            【实验指导书】：{{#conversation.mem_refFile#}}
+
+            【JSON蓝图】：{{#conversation.mem_current_json#}}
+
+            【数据表】：{{#conversation.mem_md_tables#}}
+
+            【其他要求】：{{#conversation.mem_other_requests#}}'
+        selected: false
+        title: 生成实验结果
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1780306535321'
+      position:
+        x: 147.6332263451044
+        y: 1313.723217961764
+      positionAbsolute:
+        x: 147.6332263451044
+        y: 1313.723217961764
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        code: "import re\n\ndef main(raw_text: str) -> dict:\n    try:\n        if\
+          \ not raw_text:\n            return {\"clean_text\": \"\"}\n           \
+          \ \n        # 使用正则表达式，匹配 <think> 到 </think> 之间的所有内容（包括换行符）并将其替换为空\n    \
+          \    # flags=re.DOTALL 确保正则的点号(.)能够匹配换行符\n        cleaned_text = re.sub(r'<think>.*?</think>\\\
+          n*', '', raw_text, flags=re.DOTALL)\n        \n        # 去除首尾可能多余的空格或换行\n\
+          \        cleaned_text = cleaned_text.strip()\n        \n        return {\"\
+          clean_text\": cleaned_text}\n        \n    except Exception as e:\n    \
+          \    return {\"clean_text\": raw_text} # 如果出错，降级返回原文本"
+        code_language: python3
+        outputs:
+          clean_text:
+            children: null
+            type: string
+        selected: false
+        title: JSON净化
+        type: code
+        variables:
+        - value_selector:
+          - '1780159307661'
+          - text
+          value_type: string
+          variable: raw_text
+      height: 51
+      id: '1780318362803'
+      position:
+        x: 760.9789486898251
+        y: 556.6141857955458
+      positionAbsolute:
+        x: 760.9789486898251
+        y: 556.6141857955458
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        code: "import re\n\ndef main(raw_text: str) -> dict:\n    try:\n        if\
+          \ not raw_text:\n            return {\"clean_text\": \"\"}\n           \
+          \ \n        # 使用正则表达式，匹配 <think> 到 </think> 之间的所有内容（包括换行符）并将其替换为空\n    \
+          \    # flags=re.DOTALL 确保正则的点号(.)能够匹配换行符\n        cleaned_text = re.sub(r'<think>.*?</think>\\\
+          n*', '', raw_text, flags=re.DOTALL)\n        \n        # 去除首尾可能多余的空格或换行\n\
+          \        cleaned_text = cleaned_text.strip()\n        \n        return {\"\
+          clean_text\": cleaned_text}\n        \n    except Exception as e:\n    \
+          \    return {\"clean_text\": raw_text} # 如果出错，降级返回原文本"
+        code_language: python3
+        desc: ''
+        isInIteration: false
+        isInLoop: false
+        outputs:
+          clean_text:
+            children: null
+            type: string
+        selected: false
+        title: 实验结果净化
+        type: code
+        variables:
+        - value_selector:
+          - '1780306535321'
+          - text
+          value_type: string
+          variable: raw_text
+      height: 51
+      id: '17803189114530'
+      position:
+        x: 450.9435593216773
+        y: 1313.723217961764
+      positionAbsolute:
+        x: 450.9435593216773
+        y: 1313.723217961764
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        answer: '{{#1780415931066.output#}}'
+        selected: false
+        title: 报告整合
+        type: answer
+        variables: []
+      height: 102
+      id: '1780415514971'
+      position:
+        x: 1066.5920146112387
+        y: 1379.8850607722693
+      positionAbsolute:
+        x: 1066.5920146112387
+        y: 1379.8850607722693
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        selected: false
+        template: "# 工程力学实验综合报告\r\n*(请在此处修改为真实的实验名称与您的姓名、学号)*\r\n\r\n{{purpose}}\r\
+          \n\r\n{{principle}}\r\n\r\n{{apparatus}}\r\n\r\n{{steps}}\r\n\r\n{{results}}\r\
+          \n\r\n---\r\n*Powered by 智能力学数据排版工作流*"
+        title: 模板转换
+        type: template-transform
+        variables:
+        - value_selector:
+          - conversation
+          - mem_purpose
+          value_type: string
+          variable: purpose
+        - value_selector:
+          - conversation
+          - mem_principle
+          value_type: string
+          variable: principle
+        - value_selector:
+          - conversation
+          - mem_apparatus
+          value_type: string
+          variable: apparatus
+        - value_selector:
+          - conversation
+          - mem_steps
+          value_type: string
+          variable: steps
+        - value_selector:
+          - '17803189114530'
+          - clean_text
+          value_type: string
+          variable: results
+      height: 51
+      id: '1780415931066'
+      position:
+        x: 767.7634446245897
+        y: 1313.723217961764
+      positionAbsolute:
+        x: 767.7634446245897
+        y: 1313.723217961764
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        items:
+        - input_type: variable
+          operation: over-write
+          value:
+          - '1780415931066'
+          - output
+          variable_selector:
+          - conversation
+          - mem_full_text
+        - input_type: variable
+          operation: over-write
+          value:
+          - '17803189114530'
+          - clean_text
+          variable_selector:
+          - conversation
+          - mem_results
+        selected: false
+        title: 变量赋值 3
+        type: assigner
+        version: '2'
+      height: 109
+      id: '1780416314089'
+      position:
+        x: 1066.5920146112387
+        y: 1241.6165454755055
+      positionAbsolute:
+        x: 1066.5920146112387
+        y: 1241.6165454755055
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            temperature: 0.7
+            verbosity: medium
+          mode: chat
+          name: gpt-5.4
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: f2ac478e-7a33-47bf-b5c9-1594e970b306
+          role: system
+          text: '你是一个顶尖的工程力学专家。用户上传了在本地跑出的实验结果图表，并要求你来完成深度的物理分析。
+
+
+            【你的核心任务：看图填空】
+
+            在【原报告】的“五、实验结果”章节中，我为你预留了若干个这样的占位块：
+
+            >  **【学生分析作答区】**
+
+            > 请在此处填写你的分析：结合上方的数据与图表...
+
+
+            请你仔细观察用户上传的图片，结合【实验指导书】以及【原报告】其他章节的内容，对上传的图片进行深入的分析，并执行以下操作：
+
+            1. 精准替换：将上述所有“学生作答区”的占位符，**彻底替换**为你撰写的专业深度分析。
+
+            2. 深度剖析：不要只写表面现象。请直接指出图中的关键特征，并解释其背后的物理原因或仪器特性。
+
+            3. 格式保全（极其重要）：**绝对不要**修改【原报告】中除“五、实验结果”章节之外的任何内容。“五、实验结果”中原有的 Markdown
+            标题层级（##）、数据表排版，图片插入标签等也必须保持不变。你只需要“填空”。
+
+            4. 纯净输出：**只输出修改后的第五章内容**，其他章节的内容一律不输出。
+
+            5.使用markdown格式写作，输出格式：
+
+            ## 五、 实验结果
+
+            <!-- 此处为你加入结果分析之后的正文 -->
+
+            6.【markdown格式具体要求】：{{#env.GLOBAL_MD_STYLE#}}
+
+            7.注意【用户输入要求】和【其他要求】，生成内容时参考这些要求'
+        - id: 67388656-f64c-46e7-ac21-91d30902c38b
+          role: user
+          text: '【原报告】：{{#conversation.mem_full_text#}}
+
+            【实验指导书】：{{#conversation.mem_refFile#}}
+
+            【图片】：{{#sys.files#}}
+
+            【其他要求】：{{#conversation.mem_other_requests#}}
+
+            【用户输入要求】：{{#sys.query#}}'
+        reasoning_format: separated
+        selected: false
+        title: 生成实验结果分析
+        type: llm
+        vision:
+          configs:
+            detail: high
+            variable_selector:
+            - sys
+            - files
+          enabled: true
+      height: 87
+      id: '1780456606308'
+      position:
+        x: 147.6332263451044
+        y: 1511.3112318559595
+      positionAbsolute:
+        x: 147.6332263451044
+        y: 1511.3112318559595
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        desc: ''
+        isInIteration: false
+        isInLoop: false
+        selected: false
+        template: "# 工程力学实验综合报告\r\n*(请在此处修改为真实的实验名称与您的姓名、学号)*\r\n\r\n{{purpose}}\r\
+          \n\r\n{{principle}}\r\n\r\n{{apparatus}}\r\n\r\n{{steps}}\r\n\r\n{{results}}"
+        title: 除总结外文本整合
+        type: template-transform
+        variables:
+        - value_selector:
+          - conversation
+          - mem_purpose
+          value_type: string
+          variable: purpose
+        - value_selector:
+          - conversation
+          - mem_principle
+          value_type: string
+          variable: principle
+        - value_selector:
+          - conversation
+          - mem_apparatus
+          value_type: string
+          variable: apparatus
+        - value_selector:
+          - conversation
+          - mem_steps
+          value_type: string
+          variable: steps
+        - value_selector:
+          - '1780456606308'
+          - text
+          value_type: string
+          variable: results
+      height: 51
+      id: '17804590437600'
+      position:
+        x: 430.6636115728494
+        y: 1511.3112318559595
+      positionAbsolute:
+        x: 430.6636115728494
+        y: 1511.3112318559595
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            temperature: 0.2
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: c6c232d6-1c57-4161-8bb9-d617a09a9196
+          role: system
+          text: '# Insight
+
+            - 文章结构：{{#env.structure#}}
+
+            标题、小标题格式以“文章结构”中的为准
+
+            # Statement
+
+            你负责按照“文章结构”，参考【报告大纲】中的“总结”部分，根据【前文】的内容，撰写实验报告中“五、总结”章节的内容，分条输出实验步骤。
+
+            ！！！注意输出markdown格式！！！具体参见markdown格式要求：{{#env.GLOBAL_MD_STYLE#}}
+
+            # Personality
+
+            一两个要点，简明扼要即可，不要长篇大论。
+
+            # Experiment
+
+            不要输出你的思考和推理过程等，仅输出结果，输出格式如下：
+
+            ## 五、 总结
+
+            <!-- 此处为正文 -->'
+        - id: 805723ec-8e29-4d8d-a392-9353b0610c34
+          role: user
+          text: '【报告大纲】：{{#conversation.mem_outline#}}
+
+            【前文】：{{#17804590437600.output#}}
+
+            【其他要求】：{{#conversation.mem_other_requests#}}'
+        selected: false
+        title: 生成实验总结
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1780459145283'
+      position:
+        x: 747.3374995912316
+        y: 1511.3112318559595
+      positionAbsolute:
+        x: 747.3374995912316
+        y: 1511.3112318559595
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        desc: ''
+        isInIteration: false
+        isInLoop: false
+        selected: false
+        template: "{{context}}\r\n\r\n{{conclusion}}\r\n\r\n---\r\n*Powered by 智能力学数据排版工作流*"
+        title: 最终文本整合
+        type: template-transform
+        variables:
+        - value_selector:
+          - '17804590437600'
+          - output
+          value_type: string
+          variable: context
+        - value_selector:
+          - '1780459145283'
+          - text
+          value_type: string
+          variable: conclusion
+      height: 51
+      id: '17804648049150'
+      position:
+        x: 1066.5920146112387
+        y: 1511.3112318559595
+      positionAbsolute:
+        x: 1066.5920146112387
+        y: 1511.3112318559595
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        answer: '{{#17804648049150.output#}}'
+        selected: false
+        title: 最终报告输出
+        type: answer
+        variables: []
+      height: 102
+      id: '1780465054120'
+      position:
+        x: 1390.3277631088945
+        y: 1511.3112318559595
+      positionAbsolute:
+        x: 1390.3277631088945
+        y: 1511.3112318559595
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        items:
+        - input_type: variable
+          operation: over-write
+          value:
+          - '17808045266790'
+          - clean_text
+          variable_selector:
+          - conversation
+          - mem_matlab_code
+        selected: false
+        title: 变量赋值 4
+        type: assigner
+        version: '2'
+      height: 83
+      id: '1780804381440'
+      position:
+        x: 1124.239010487356
+        y: 949.9932053772945
+      positionAbsolute:
+        x: 1124.239010487356
+        y: 949.9932053772945
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        code: "import re\n\ndef main(raw_text: str) -> dict:\n    try:\n        if\
+          \ not raw_text:\n            return {\"clean_text\": \"\"}\n           \
+          \ \n        # 使用正则表达式，匹配 <think> 到 </think> 之间的所有内容（包括换行符）并将其替换为空\n    \
+          \    # flags=re.DOTALL 确保正则的点号(.)能够匹配换行符\n        cleaned_text = re.sub(r'<think>.*?</think>\\\
+          n*', '', raw_text, flags=re.DOTALL)\n        \n        # 去除首尾可能多余的空格或换行\n\
+          \        cleaned_text = cleaned_text.strip()\n        \n        return {\"\
+          clean_text\": cleaned_text}\n        \n    except Exception as e:\n    \
+          \    return {\"clean_text\": raw_text} # 如果出错，降级返回原文本"
+        code_language: python3
+        desc: ''
+        isInIteration: false
+        isInLoop: false
+        outputs:
+          clean_text:
+            children: null
+            type: string
+        selected: false
+        title: MATLAB净化
+        type: code
+        variables:
+        - value_selector:
+          - '1780222438462'
+          - text
+          value_type: string
+          variable: raw_text
+      height: 51
+      id: '17808045266790'
+      position:
+        x: 464.41471677551635
+        y: 949.9932053772945
+      positionAbsolute:
+        x: 464.41471677551635
+        y: 949.9932053772945
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            temperature: 0.1
+          mode: chat
+          name: deepseek-coder
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: c007426e-4c15-490d-9c43-b818fde22f4b
+          role: system
+          text: '你是一个资深的航空航天工程力学软件专家与 MATLAB 调试大师。用户在本地运行上一次生成的 MATLAB 脚本时遇到了报错，或者提出了新的代码修改需求。
+
+
+            【你的核心任务】
+
+            请仔细阅读【旧版代码】和【报错或修改需求】，参考【JSON蓝图】中的绘图要求，定位 bug 原因或按照用户要求进行代码重构。
+
+
+            【MATLAB 编码严苛底线（必须100%继承，绝不可在修改中遗失）】
+
+            1. 读取防护：必须保留 `opts.VariableNamingRule = ''preserve'';` 以防止 CSV 表头重命名警告。
+
+            2. 维度安全锁：在提取数据后，进行任何画图或拟合计算前，必须保留使用 `(:)` 将变量强制转换为列向量的操作（例如 `x = x(:);`），这是解决绝大部分报错的核心防御机制！
+
+            3. 输出规范：严格根据蓝图绘制，保持完整的 xlabel, ylabel, title 和 grid on。
+
+
+            请直接输出修复完成后的纯粹 MATLAB 完整代码块。
+
+            请在修复或修改的那几行代码上方，使用注释简要标记你改动了哪里，方便用户查阅。
+
+            绝对不要在代码块之外输出任何废话解释。'
+        - id: b48bda7a-e512-483a-9b8f-fe22fe1a55da
+          role: user
+          text: '【旧版代码】：{{#conversation.mem_matlab_code#}}
+
+            【报错或修改需求】：{{#sys.query#}}
+
+            【JSON蓝图】：{{#conversation.mem_current_json#}}'
+        selected: false
+        title: 修改MATLAB代码
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1780807270658'
+      position:
+        x: 185.52614050786417
+        y: 1088.6010562346603
+      positionAbsolute:
+        x: 185.52614050786417
+        y: 1088.6010562346603
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        code: "import re\n\ndef main(raw_text: str) -> dict:\n    try:\n        if\
+          \ not raw_text:\n            return {\"clean_text\": \"\"}\n           \
+          \ \n        # 使用正则表达式，匹配 <think> 到 </think> 之间的所有内容（包括换行符）并将其替换为空\n    \
+          \    # flags=re.DOTALL 确保正则的点号(.)能够匹配换行符\n        cleaned_text = re.sub(r'<think>.*?</think>\\\
+          n*', '', raw_text, flags=re.DOTALL)\n        \n        # 去除首尾可能多余的空格或换行\n\
+          \        cleaned_text = cleaned_text.strip()\n        \n        return {\"\
+          clean_text\": cleaned_text}\n        \n    except Exception as e:\n    \
+          \    return {\"clean_text\": raw_text} # 如果出错，降级返回原文本"
+        code_language: python3
+        desc: ''
+        isInIteration: false
+        isInLoop: false
+        outputs:
+          clean_text:
+            children: null
+            type: string
+        selected: false
+        title: 修改MATLAB代码净化
+        type: code
+        variables:
+        - value_selector:
+          - '1780807270658'
+          - text
+          value_type: string
+          variable: raw_text
+      height: 51
+      id: '17808113937980'
+      position:
+        x: 464.41471677551635
+        y: 1105.4644741517166
+      positionAbsolute:
+        x: 464.41471677551635
+        y: 1105.4644741517166
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        answer: '{{#17808113937980.clean_text#}}'
+        selected: false
+        title: 审阅修改后的MATLAB代码
+        type: answer
+        variables: []
+      height: 102
+      id: '1780811429569'
+      position:
+        x: 767.7634446245897
+        y: 1157.155900126583
+      positionAbsolute:
+        x: 767.7634446245897
+        y: 1157.155900126583
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        items:
+        - input_type: variable
+          operation: over-write
+          value:
+          - '17808113937980'
+          - clean_text
+          variable_selector:
+          - conversation
+          - mem_matlab_code
+        selected: false
+        title: 变量赋值 5
+        type: assigner
+        version: '2'
+      height: 83
+      id: '1780811568220'
+      position:
+        x: 767.7634446245897
+        y: 1055.7805472222096
+      positionAbsolute:
+        x: 767.7634446245897
+        y: 1055.7805472222096
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    viewport:
+      x: 256.7196502222737
+      y: 46.34577401170168
+      zoom: 0.43527528164806295
+  rag_pipeline_variables: []
